@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
+import good.damn.videoapi.adapters.VAAdapterVideos
+import good.damn.videoapi.arch.models.VAModelVideoList
+import good.damn.videoapi.arch.state.VAStateResponse
 import good.damn.videoapi.arch.state.VAStateVideoList
 import good.damn.videoapi.arch.viewModels.VAViewModelVideoList
 import kotlinx.coroutines.CoroutineScope
@@ -29,18 +32,17 @@ class VAFragmentListVideos
     ) = RecyclerView(
         requireContext()
     ).apply {
-
-        CoroutineScope(
-            Dispatchers.IO
-        ).launch {
-
-        }
-
         setBackgroundColor(0)
+
+        getListAsync {
+            adapter = VAAdapterVideos(it)
+        }
     }
 
 
-    private inline fun getListAsync() = CoroutineScope(
+    private inline fun getListAsync(
+        crossinline success: (List<VAModelVideoList>) -> Unit
+    ) = CoroutineScope(
         Dispatchers.IO
     ).launch {
         mViewModelVideoList.getAll()
@@ -48,13 +50,17 @@ class VAFragmentListVideos
             withContext(
                 Dispatchers.Main
             ) {
-                invalidateViewList(it)
+                invalidateViewList(
+                    it,
+                    success
+                )
             }
         }
     }
 
     private inline fun invalidateViewList(
-        state: VAStateVideoList
+        state: VAStateVideoList,
+        success: (List<VAModelVideoList>) -> Unit
     ) {
         if (state.isLoading) {
             return
@@ -64,7 +70,8 @@ class VAFragmentListVideos
             return
         }
 
-
-
+        success(
+            state.videoList
+        )
     }
 }
