@@ -1,10 +1,7 @@
 package good.damn.videoapi.arch.repos
 
-import good.damn.videoapi.arch.dto.VADtoVideoListItem
+import good.damn.videoapi.arch.dto.list.VADtoVideoListItem
 
 interface VARepoVideo {
-    suspend fun getVideoById(
-        id: String
-    )
-    suspend fun getListVideos(): List<VADtoVideoListItem>
+    suspend fun getListVideos(): VADtoVideoListItem
 }

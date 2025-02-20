@@ -4,6 +4,6 @@ import good.damn.videoapi.arch.models.VAModelVideoList
 
 data class VAStateVideoList(
     val isLoading: Boolean = false,
-    val videoList: List<VAModelVideoList> = emptyList(),
+    val videoList: List<VAModelVideoList>? = null,
     val error: String? = null
 )

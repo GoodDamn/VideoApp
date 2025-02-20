@@ -3,6 +3,8 @@ package good.damn.videoapi.arch.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import good.damn.videoapi.arch.models.VAModelVideoList
+import good.damn.videoapi.arch.state.VAStateResponse
 import good.damn.videoapi.arch.state.VAStateVideoList
 import good.damn.videoapi.arch.usecases.VAUseCaseVideoList
 import kotlinx.coroutines.Dispatchers
@@ -21,12 +23,27 @@ class VAViewModelVideoList @Inject constructor(
         VAStateVideoList()
     )
 
-    val uiState: StateFlow<VAStateVideoList> =
-        mUiState.asStateFlow()
+    val uiState: StateFlow<VAStateVideoList> = mUiState
 
     fun getAll() = viewModelScope.launch(
         Dispatchers.IO
     ) {
-        useCase
+        useCase().collect {
+            mUiState.value = useCaseDefine(it)
+        }
+    }
+
+    private inline fun useCaseDefine(
+        state: VAStateResponse<List<VAModelVideoList>>
+    ) = when (state) {
+        is VAStateResponse.Error -> VAStateVideoList(
+            error = state.error
+        )
+
+        is VAStateResponse.Loading -> VAStateVideoList()
+
+        is VAStateResponse.Success -> VAStateVideoList(
+            videoList = state.data
+        )
     }
 }

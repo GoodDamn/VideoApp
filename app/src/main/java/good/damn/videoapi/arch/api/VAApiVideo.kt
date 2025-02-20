@@ -1,16 +1,15 @@
 package good.damn.videoapi.arch.api
 
-import good.damn.videoapi.arch.dto.VADtoVideoListItem
+import good.damn.videoapi.arch.dto.list.VADtoVideoListItem
 import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface VAApiVideo {
+    @GET("/list")
+    suspend fun getListVideos(): VADtoVideoListItem
 
-    @GET("/api/v3/{id}")
+    /*@GET("/{id}")
     suspend fun getVideoById(
         @Path("id") id: String
-    )
-
-    @GET("/api")
-    suspend fun getListVideos(): List<VADtoVideoListItem>
+    )*/
 }

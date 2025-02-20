@@ -1,6 +1,7 @@
 package good.damn.videoapi.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.activity.viewModels
@@ -23,6 +24,10 @@ import kotlinx.coroutines.withContext
 class VAFragmentListVideos
 : Fragment() {
 
+    companion object {
+        private const val TAG = "VAFragmentListVideos"
+    }
+    
     private val mViewModelVideoList: VAViewModelVideoList by viewModels()
 
     override fun onCreateView(
@@ -62,11 +67,16 @@ class VAFragmentListVideos
         state: VAStateVideoList,
         success: (List<VAModelVideoList>) -> Unit
     ) {
+        Log.d(TAG, "invalidateViewList: $state")
         if (state.isLoading) {
             return
         }
 
         if (state.error != null) {
+            return
+        }
+
+        if (state.videoList == null) {
             return
         }
 

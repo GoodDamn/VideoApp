@@ -1,7 +1,8 @@
 package good.damn.videoapi.arch.state
 
 sealed class VAStateResponse<T>(
-    val data: T? = null
+    val data: T? = null,
+    val error: String? = null
 ) {
     class Loading<T>: VAStateResponse<T>()
 
@@ -13,5 +14,8 @@ sealed class VAStateResponse<T>(
 
     class Error<T>(
         error: String?
-    ): VAStateResponse<T>()
+    ): VAStateResponse<T>(
+        error = error
+    )
 }
+

@@ -1,7 +1,8 @@
 package good.damn.videoapi.arch.models
 
 data class VAModelVideoList(
-    val id: String?,
-    val thumbnailUrl: String?,
-    val videoUrl: String?
+    val id: Int?,
+    val title: String?,
+    val thumbnail: String?,
+    val subtitle: String?
 )
