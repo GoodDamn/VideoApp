@@ -3,6 +3,7 @@ package good.damn.videoapi.holders
 import android.content.Context
 import android.view.Gravity
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -10,6 +11,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import good.damn.videoapi.VAApp
+import good.damn.videoapi.adapters.videos.VAListenerOnSelectVideo
 
 class VAViewHolderVideo(
     val textViewTitle: AppCompatTextView,

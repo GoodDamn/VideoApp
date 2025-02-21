@@ -3,14 +3,13 @@ package good.damn.videoapi.arch.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import good.damn.videoapi.arch.models.VAModelVideoList
+import good.damn.videoapi.arch.models.VAModelVideoListItem
 import good.damn.videoapi.arch.state.VAStateResponse
 import good.damn.videoapi.arch.state.VAStateVideoList
 import good.damn.videoapi.arch.usecases.VAUseCaseVideoList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,7 +33,7 @@ class VAViewModelVideoList @Inject constructor(
     }
 
     private inline fun useCaseDefine(
-        state: VAStateResponse<List<VAModelVideoList>>
+        state: VAStateResponse<List<VAModelVideoListItem>>
     ) = when (state) {
         is VAStateResponse.Error -> VAStateVideoList(
             error = state.error

@@ -1,15 +1,13 @@
 package good.damn.videoapi.arch.usecases
 
-import android.util.Log
-import good.damn.videoapi.arch.models.VAModelVideoList
+import good.damn.videoapi.arch.models.VAModelVideoListItem
 import good.damn.videoapi.arch.repos.VARepoVideo
 import good.damn.videoapi.arch.state.VAStateResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.lang.annotation.Inherited
 import javax.inject.Inject
 
-private typealias Videos = List<VAModelVideoList>
+private typealias Videos = List<VAModelVideoListItem>
 
 class VAUseCaseVideoList @Inject constructor(
     private val repo: VARepoVideo

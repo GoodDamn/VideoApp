@@ -17,13 +17,17 @@
         android:theme="@style/Theme.VideoAPI"
         tools:targetApi="31">
 
-        <activity android:name=".VAActivityMain"
+        <activity android:name=".activities.VAActivityListVideos"
             android:exported="true">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+
+
+        <activity android:name=".activities.VAActivityVideo"/>
+
     </application>
 
 </manifest>

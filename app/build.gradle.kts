@@ -53,7 +53,6 @@ dependencies {
     implementation("com.squareup.picasso:picasso:2.8")
 
     implementation("com.google.dagger:hilt-android:2.48")
-    implementation(libs.androidx.viewpager2)
     kapt("com.google.dagger:hilt-android-compiler:2.48")
 
     implementation("androidx.activity:activity-ktx:1.9.0")

@@ -1,15 +1,17 @@
-package good.damn.videoapi.adapters
+package good.damn.videoapi.adapters.videos
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import good.damn.videoapi.VAApp
-import good.damn.videoapi.arch.models.VAModelVideoList
+import good.damn.videoapi.arch.models.VAModelVideoListItem
 import good.damn.videoapi.holders.VAViewHolderVideo
 
 class VAAdapterVideos(
-    private val videos: List<VAModelVideoList>
-): RecyclerView.Adapter<VAViewHolderVideo>() {
+    private val videos: List<VAModelVideoListItem>,
+    private val onSelectVideo: VAListenerOnSelectVideo
+): RecyclerView.Adapter<VAViewHolderVideo>(){
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -30,6 +32,12 @@ class VAAdapterVideos(
         videos[position].apply {
             holder.textViewTitle.text = title
             holder.textViewSubtitle.text = subtitle
+
+            holder.itemView.setOnClickListener {
+                onSelectVideo.onSelectVideo(
+                    this
+                )
+            }
 
             Picasso.get()
                 .load(thumbnail)
