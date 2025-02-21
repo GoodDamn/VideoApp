@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import dagger.hilt.android.AndroidEntryPoint
@@ -11,6 +12,7 @@ import good.damn.videoapi.arch.models.VAModelVideoDetails
 import good.damn.videoapi.arch.state.VAStateResponse
 import good.damn.videoapi.arch.state.VAStateVideoDetails
 import good.damn.videoapi.arch.viewModels.VAViewModelVideoDetails
+import good.damn.videoapi.misc.VAPlayerViewPlaysWhenReady
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -61,7 +63,16 @@ class VAActivityVideo
                             it.videoUrl
                         )
                     )
+                    addListener(
+                        VAPlayerViewPlaysWhenReady(
+                            this
+                        )
+                    )
+
+                    prepare()
                 }
+
+
 
                 setContentView(
                     this
