@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import good.damn.videoapi.adapters.VAAdapterVideos
@@ -40,7 +41,14 @@ class VAFragmentListVideos
         setBackgroundColor(0)
 
         getListAsync {
+            layoutManager = LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
             adapter = VAAdapterVideos(it)
+
+            setHasFixedSize(true)
         }
     }
 

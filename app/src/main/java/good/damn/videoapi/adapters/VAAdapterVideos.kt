@@ -23,6 +23,9 @@ class VAAdapterVideos(
         holder: VAViewHolderVideo,
         position: Int
     ) {
-
+        videos[position].apply {
+            holder.textViewTitle.text = title
+            holder.textViewSubtitle.text = subtitle
+        }
     }
 }

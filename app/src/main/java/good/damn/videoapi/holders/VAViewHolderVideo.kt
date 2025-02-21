@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
+import good.damn.videoapi.VAApp
 
 class VAViewHolderVideo(
     val textViewTitle: AppCompatTextView,
@@ -45,6 +46,11 @@ class VAViewHolderVideo(
             val tvTitle = AppCompatTextView(
                 context
             ).apply {
+
+                setTextColor(
+                    VAApp.theme.colorText
+                )
+
                 layoutContent.addView(
                     this,
                     -1,
@@ -55,6 +61,11 @@ class VAViewHolderVideo(
             val tvSubtitle = AppCompatTextView(
                 context
             ).apply {
+
+                setTextColor(
+                    VAApp.theme.colorText
+                )
+
                 layoutContent.addView(
                     this,
                     -1,
