@@ -67,7 +67,12 @@ VAListenerOnSelectVideo {
             Intent(
                 this,
                 VAActivityVideo::class.java
-            )
+            ).apply {
+                putExtra(
+                    VAActivityVideo.KEY_EXTRA_ID,
+                    video.id
+                )
+            }
         )
     }
 
