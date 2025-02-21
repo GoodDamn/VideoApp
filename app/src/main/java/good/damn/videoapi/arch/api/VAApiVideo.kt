@@ -5,7 +5,8 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface VAApiVideo {
-    @GET("/list")
+
+    @GET("list")
     suspend fun getListVideos(): VADtoVideoListItem
 
     /*@GET("/{id}")
