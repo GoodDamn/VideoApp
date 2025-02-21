@@ -5,4 +5,7 @@ import androidx.annotation.ColorInt;
 public class VATheme {
     @ColorInt
     public int colorText;
+
+    @ColorInt
+    public int colorTextBack;
 }

@@ -50,6 +50,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
     implementation("androidx.recyclerview:recyclerview:1.3.0")
 
+    implementation("com.squareup.picasso:picasso:2.8")
+
     implementation("com.google.dagger:hilt-android:2.48")
     implementation(libs.androidx.viewpager2)
     kapt("com.google.dagger:hilt-android-compiler:2.48")

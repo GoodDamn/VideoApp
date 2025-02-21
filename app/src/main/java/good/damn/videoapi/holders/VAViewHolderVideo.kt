@@ -14,26 +14,47 @@ import good.damn.videoapi.VAApp
 class VAViewHolderVideo(
     val textViewTitle: AppCompatTextView,
     val textViewSubtitle: AppCompatTextView,
-    val layout: ViewGroup
+    val imageViewThumbnail: AppCompatImageView,
+    layout: ViewGroup
 ): RecyclerView.ViewHolder(
     layout
 ) {
 
     companion object {
         inline fun create(
-            context: Context
+            context: Context,
+            width: Float,
+            height: Float
         ): VAViewHolderVideo {
 
             val layout = FrameLayout(
                 context
             ).apply {
-                setBackgroundColor(0)
+                background = null
+                layoutParams = ViewGroup.LayoutParams(
+                    width.toInt(),
+                    height.toInt()
+                )
+            }
+
+
+            val ivThumbnail = AppCompatImageView(
+                context
+            ).apply {
+                layout.addView(
+                    this,
+                    -1,
+                    -1
+                )
             }
 
 
             val layoutContent = LinearLayout(
                 context
             ).apply {
+                setBackgroundColor(
+                    VAApp.theme.colorTextBack
+                )
                 orientation = LinearLayout.VERTICAL
                 layoutParams = FrameLayout.LayoutParams(
                     -1,
@@ -46,7 +67,7 @@ class VAViewHolderVideo(
             val tvTitle = AppCompatTextView(
                 context
             ).apply {
-
+                background = null
                 setTextColor(
                     VAApp.theme.colorText
                 )
@@ -61,7 +82,7 @@ class VAViewHolderVideo(
             val tvSubtitle = AppCompatTextView(
                 context
             ).apply {
-
+                background = null
                 setTextColor(
                     VAApp.theme.colorText
                 )
@@ -80,6 +101,7 @@ class VAViewHolderVideo(
             return VAViewHolderVideo(
                 tvTitle,
                 tvSubtitle,
+                ivThumbnail,
                 layout
             )
         }

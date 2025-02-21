@@ -11,6 +11,18 @@ class VAApp
 
     companion object {
         var theme: VATheme = VAThemeDark()
+
+        var width = 0f
+        var height = 0f
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        resources.displayMetrics.apply {
+            width = widthPixels.toFloat()
+            height = heightPixels.toFloat()
+        }
     }
 
 }
