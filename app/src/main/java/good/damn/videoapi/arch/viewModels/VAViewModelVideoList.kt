@@ -1,35 +1,42 @@
 package good.damn.videoapi.arch.viewModels
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import good.damn.videoapi.arch.models.VAModelVideoListItem
+import good.damn.videoapi.arch.repos.VARepoVideo
 import good.damn.videoapi.arch.state.VAStateResponse
 import good.damn.videoapi.arch.state.VAStateVideoList
-import good.damn.videoapi.arch.usecases.VAUseCaseVideoList
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class VAViewModelVideoList @Inject constructor(
-    private val useCase: VAUseCaseVideoList
+    private val repo: VARepoVideo
 ): ViewModel() {
 
-    private val mUiState = MutableStateFlow(
-        VAStateVideoList()
+    val getListDao: LiveData<
+        List<VAModelVideoListItem>
+    > = repo.getListVideosDao.flowOn(
+        Dispatchers.Main
+    ).asLiveData(
+        viewModelScope.coroutineContext
     )
 
-    val uiState: StateFlow<VAStateVideoList> = mUiState
+    val getList = repo.getListVideos()
+        .catch { e ->
 
-    fun getAll() = viewModelScope.launch(
-        Dispatchers.IO
-    ) {
-        useCase().collect {
-            mUiState.value = useCaseDefine(it)
-        }
+        }.asLiveData()
+
+    fun add(
+        list: List<VAModelVideoListItem>
+    ) = viewModelScope.launch {
+        repo.add(list)
     }
 
     private inline fun useCaseDefine(

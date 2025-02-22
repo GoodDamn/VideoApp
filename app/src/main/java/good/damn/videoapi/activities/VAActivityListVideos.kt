@@ -2,16 +2,20 @@ package good.damn.videoapi.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import dagger.hilt.android.AndroidEntryPoint
 import good.damn.videoapi.adapters.videos.VAAdapterVideos
 import good.damn.videoapi.adapters.videos.VAListenerOnSelectVideo
 import good.damn.videoapi.arch.models.VAModelVideoListItem
 import good.damn.videoapi.arch.state.VAStateVideoList
 import good.damn.videoapi.arch.viewModels.VAViewModelVideoList
+import good.damn.videoapi.extensions.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -23,8 +27,21 @@ class VAActivityListVideos
 : AppCompatActivity(),
 VAListenerOnSelectVideo {
 
+    companion object {
+        private val TAG = VAActivityListVideos::class.simpleName
+    }
+
     private val mViewModelVideoList: VAViewModelVideoList
         by viewModels()
+
+    private val mListVideos: MutableList<
+        VAModelVideoListItem
+    > = mutableListOf()
+
+    private val mAdapter = VAAdapterVideos(
+        mListVideos,
+        onSelectVideo = this@VAActivityListVideos
+    )
 
     override fun onCreate(
         savedInstanceState: Bundle?
@@ -35,27 +52,56 @@ VAListenerOnSelectVideo {
 
         val context = this
 
+        val layoutSwipeRefresh = SwipeRefreshLayout(
+            context
+        ).apply {
+            setBackgroundColor(0)
+
+            setOnRefreshListener {
+                val s = mListVideos.size
+                mListVideos.clear()
+                mAdapter.notifyItemRangeRemoved(
+                    0,
+                    s
+                )
+                getListAsync()
+                isRefreshing = false
+            }
+        }
+
         RecyclerView(
             context
         ).apply {
             setBackgroundColor(0)
 
-            getListAsync {
-                layoutManager = LinearLayoutManager(
-                    context,
-                    LinearLayoutManager.VERTICAL,
-                    false
-                )
-                adapter = VAAdapterVideos(
-                    it,
-                    onSelectVideo = this@VAActivityListVideos
-                )
+            adapter = mAdapter
 
-                setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+
+            layoutSwipeRefresh.addView(
+                this
+            )
+        }
+
+        setContentView(
+            layoutSwipeRefresh
+        )
+
+        getListAsync {
+
+            if (mListVideos.isNotEmpty()) {
+                mListVideos.clear()
+                mAdapter.notifyDataSetChanged()
             }
 
-            setContentView(
-                this
+            mListVideos.addAll(it)
+            mAdapter.notifyItemRangeInserted(
+                0,
+                mListVideos.size
             )
         }
     }
@@ -77,41 +123,30 @@ VAListenerOnSelectVideo {
     }
 
     private inline fun getListAsync(
-        crossinline success: (List<VAModelVideoListItem>) -> Unit
-    ) = CoroutineScope(
-        Dispatchers.IO
-    ).launch {
-        mViewModelVideoList.getAll()
-        mViewModelVideoList.uiState.collectLatest {
-            withContext(
-                Dispatchers.Main
-            ) {
-                invalidateViewList(
-                    it,
-                    success
-                )
-            }
-        }
-    }
-
-    private inline fun invalidateViewList(
-        state: VAStateVideoList,
-        success: (List<VAModelVideoListItem>) -> Unit
+        noinline success: (
+            (List<VAModelVideoListItem>) -> Unit
+        )? = null
     ) {
-        if (state.isLoading) {
-            return
+        mViewModelVideoList.getList.observe(
+            this@VAActivityListVideos
+        ) {
+            mViewModelVideoList.add(it)
         }
 
-        if (state.error != null) {
-            return
-        }
+        mViewModelVideoList.getListDao.observe(
+            this@VAActivityListVideos
+        ) {
+            /*if (it.isLoading) {
+                toast("Loading")
+                return
+            }
 
-        if (state.videoList == null) {
-            return
-        }
+            if (state.error != null) {
+                toast("Error: ${state.error}")
+                return
+            }*/
 
-        success(
-            state.videoList
-        )
+            success?.invoke(it)
+        }
     }
 }

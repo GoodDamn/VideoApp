@@ -5,6 +5,7 @@ import good.damn.videoapi.arch.repos.VARepoVideo
 import good.damn.videoapi.arch.state.VAStateResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.last
 import javax.inject.Inject
 
 class VAUseCaseVideoDetails @Inject constructor(
@@ -21,7 +22,7 @@ class VAUseCaseVideoDetails @Inject constructor(
                 id
             )
             emit(VAStateResponse.Success(
-                details
+                details.last()
             ))
         } catch (e: Exception) {
             emit(VAStateResponse.Error(

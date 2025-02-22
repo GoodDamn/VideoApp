@@ -50,6 +50,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
     implementation("androidx.recyclerview:recyclerview:1.3.0")
 
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
     implementation("com.squareup.picasso:picasso:2.8")
 
     implementation("com.google.dagger:hilt-android:2.48")
@@ -58,6 +60,7 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.9.0")
     implementation("androidx.fragment:fragment-ktx:1.5.6")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
 
     implementation("com.squareup.retrofit2:converter-kotlinx-serialization:2.10.0")
 
@@ -65,6 +68,10 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
 
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
 
     implementation("androidx.media3:media3-exoplayer:1.4.1")
     implementation("androidx.media3:media3-exoplayer-dash:1.4.1")

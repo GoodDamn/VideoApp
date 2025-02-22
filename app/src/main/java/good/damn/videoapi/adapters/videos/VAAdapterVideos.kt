@@ -18,7 +18,7 @@ class VAAdapterVideos(
         viewType: Int
     ) = VAViewHolderVideo.create(
         parent.context,
-        VAApp.width,
+        -1f,
         VAApp.height * 0.25f
     )
 
