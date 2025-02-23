@@ -30,6 +30,8 @@ class VAActivityVideo
     private val mViewModelDetails: VAViewModelVideoDetails
         by viewModels()
 
+    private var mPlayer: ExoPlayer? = null
+
     override fun onCreate(
         savedInstanceState: Bundle?
     ) {
@@ -58,6 +60,8 @@ class VAActivityVideo
                 player = ExoPlayer.Builder(
                     context
                 ).build().apply {
+                    mPlayer = this
+
                     setMediaItem(
                         MediaItem.fromUri(
                             it.videoUrl
@@ -68,17 +72,34 @@ class VAActivityVideo
                             this
                         )
                     )
-
                     prepare()
                 }
-
-
 
                 setContentView(
                     this
                 )
             }
         }
+    }
+
+    override fun onPause() {
+        mPlayer?.pause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        mPlayer?.play()
+        super.onResume()
+    }
+
+    override fun onStop() {
+        mPlayer?.stop()
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        mPlayer?.release()
+        super.onDestroy()
     }
 
     private inline fun getDetailsAsync(

@@ -28,28 +28,13 @@ class VAViewModelVideoList @Inject constructor(
         viewModelScope.coroutineContext
     )
 
-    val getList = repo.getListVideos()
-        .catch { e ->
-
-        }.asLiveData()
+    val getList = repo
+        .getListVideos()
+        .asLiveData()
 
     fun add(
         list: List<VAModelVideoListItem>
     ) = viewModelScope.launch {
         repo.add(list)
-    }
-
-    private inline fun useCaseDefine(
-        state: VAStateResponse<List<VAModelVideoListItem>>
-    ) = when (state) {
-        is VAStateResponse.Error -> VAStateVideoList(
-            error = state.error
-        )
-
-        is VAStateResponse.Loading -> VAStateVideoList()
-
-        is VAStateResponse.Success -> VAStateVideoList(
-            videoList = state.data
-        )
     }
 }

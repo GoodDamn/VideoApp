@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import good.damn.videoapi.arch.models.VAModelVideoDetails
 import good.damn.videoapi.arch.models.VAModelVideoListItem
+import good.damn.videoapi.arch.repos.VARepoVideo
 import good.damn.videoapi.arch.state.VAStateResponse
 import good.damn.videoapi.arch.state.VAStateVideoDetails
 import good.damn.videoapi.arch.state.VAStateVideoList
-import good.damn.videoapi.arch.usecases.VAUseCaseVideoDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VAViewModelVideoDetails @Inject constructor(
-    private val useCase: VAUseCaseVideoDetails
+    private val repo: VARepoVideo
 ): ViewModel() {
 
     private val mUiState = MutableStateFlow(
@@ -32,7 +32,9 @@ class VAViewModelVideoDetails @Inject constructor(
     ) = viewModelScope.launch(
         Dispatchers.IO
     ) {
-        useCase(id).collect {
+        repo.getVideoDetailsById(
+            id
+        ).collectLatest {
             mUiState.value = useCaseDefine(it)
         }
     }

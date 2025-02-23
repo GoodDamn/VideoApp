@@ -13,6 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import good.damn.videoapi.adapters.videos.VAAdapterVideos
 import good.damn.videoapi.adapters.videos.VAListenerOnSelectVideo
 import good.damn.videoapi.arch.models.VAModelVideoListItem
+import good.damn.videoapi.arch.state.VAStateResponse
 import good.damn.videoapi.arch.state.VAStateVideoList
 import good.damn.videoapi.arch.viewModels.VAViewModelVideoList
 import good.damn.videoapi.extensions.toast
@@ -130,7 +131,13 @@ VAListenerOnSelectVideo {
         mViewModelVideoList.getList.observe(
             this@VAActivityListVideos
         ) {
-            mViewModelVideoList.add(it)
+            if (it.error != null || it.data == null) {
+                return@observe
+            }
+
+            mViewModelVideoList.add(
+                it.data
+            )
         }
 
         mViewModelVideoList.getListDao.observe(

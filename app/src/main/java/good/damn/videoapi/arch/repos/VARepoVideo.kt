@@ -4,6 +4,7 @@ import good.damn.videoapi.arch.api.VAApiVideo
 import good.damn.videoapi.arch.models.VAModelVideoDetails
 import good.damn.videoapi.arch.models.VAModelVideoListItem
 import good.damn.videoapi.arch.room.dao.VADaoVideo
+import good.damn.videoapi.arch.state.VAStateResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -29,17 +30,43 @@ class VARepoVideo @Inject constructor(
     }
 
     fun getListVideos(): Flow<
-        List<VAModelVideoListItem>
+        VAStateResponse<
+            List<VAModelVideoListItem>
+        >
     > = flow {
-        // TODO: processing exceptions
-        val response = api.getListVideos()
-        emit(response.list)
+        try {
+            emit(VAStateResponse.Loading())
+            val response = api.getListVideos()
+            emit(
+                VAStateResponse.Success(
+                    response.list
+                )
+            )
+        } catch (e: Exception) {
+            emit(VAStateResponse.Error(
+                "Error: ${e.localizedMessage}"
+            ))
+        }
     }.flowOn(Dispatchers.IO)
 
     fun getVideoDetailsById(
         id: Long
-    ): Flow<VAModelVideoDetails> = flow {
-        val response = api.getVideoDetailsById(id)
-        emit(response)
+    ): Flow<
+        VAStateResponse<
+            VAModelVideoDetails
+        >
+    > = flow {
+
+        try {
+            emit(VAStateResponse.Loading())
+            val response = api.getVideoDetailsById(id)
+            emit(VAStateResponse.Success(
+                response
+            ))
+        } catch (e: Exception) {
+            emit(VAStateResponse.Error(
+                "Error: ${e.localizedMessage}"
+            ))
+        }
     }.flowOn(Dispatchers.IO)
 }

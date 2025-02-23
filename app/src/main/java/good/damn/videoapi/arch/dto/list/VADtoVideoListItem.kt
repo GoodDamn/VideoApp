@@ -6,6 +6,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VADtoVideoListItem(
-    @SerialName("list")
     val list: List<VAModelVideoListItem>
 )
