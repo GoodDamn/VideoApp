@@ -29,7 +29,7 @@ class VAViewModelVideoList @Inject constructor(
     )
 
     val getList = repo
-        .getListVideos()
+        .getListVideos
         .asLiveData()
 
     fun add(

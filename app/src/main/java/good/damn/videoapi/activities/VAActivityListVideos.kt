@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -14,14 +13,8 @@ import good.damn.videoapi.adapters.videos.VAAdapterVideos
 import good.damn.videoapi.adapters.videos.VAListenerOnSelectVideo
 import good.damn.videoapi.arch.models.VAModelVideoListItem
 import good.damn.videoapi.arch.state.VAStateResponse
-import good.damn.videoapi.arch.state.VAStateVideoList
 import good.damn.videoapi.arch.viewModels.VAViewModelVideoList
 import good.damn.videoapi.extensions.toast
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class VAActivityListVideos
@@ -59,13 +52,7 @@ VAListenerOnSelectVideo {
             setBackgroundColor(0)
 
             setOnRefreshListener {
-                val s = mListVideos.size
-                mListVideos.clear()
-                mAdapter.notifyItemRangeRemoved(
-                    0,
-                    s
-                )
-                getListAsync()
+                getListVideosAsync()
                 isRefreshing = false
             }
         }
@@ -92,19 +79,20 @@ VAListenerOnSelectVideo {
             layoutSwipeRefresh
         )
 
-        getListAsync {
+        getListVideosAsync()
+    }
 
-            if (mListVideos.isNotEmpty()) {
-                mListVideos.clear()
-                mAdapter.notifyDataSetChanged()
-            }
+    override fun onStop() {
+        mViewModelVideoList.apply {
+            getList.removeObservers(
+                this@VAActivityListVideos
+            )
 
-            mListVideos.addAll(it)
-            mAdapter.notifyItemRangeInserted(
-                0,
-                mListVideos.size
+            getListDao.removeObservers(
+                this@VAActivityListVideos
             )
         }
+        super.onStop()
     }
 
     override fun onSelectVideo(
@@ -123,37 +111,54 @@ VAListenerOnSelectVideo {
         )
     }
 
-    private inline fun getListAsync(
-        noinline success: (
-            (List<VAModelVideoListItem>) -> Unit
-        )? = null
-    ) {
-        mViewModelVideoList.getList.observe(
+
+
+    private inline fun getListVideosAsync() = mViewModelVideoList.run {
+        getList.removeObservers(
+            this@VAActivityListVideos
+        )
+
+        getListDao.removeObservers(
+            this@VAActivityListVideos
+        )
+
+        getList.observe(
             this@VAActivityListVideos
         ) {
-            if (it.error != null || it.data == null) {
-                return@observe
-            }
+            Log.d(TAG, "getListVideosAsync: getList")
+            when (it) {
+                is VAStateResponse.Error -> {
+                    toast(
+                        "Error: ${it.error}"
+                    )
+                }
 
-            mViewModelVideoList.add(
-                it.data
-            )
+                is VAStateResponse.Loading -> {
+                    toast("Updating")
+                }
+
+                is VAStateResponse.Success -> {
+                    it.data?.apply {
+                        add(this)
+                    }
+                }
+            }
         }
 
-        mViewModelVideoList.getListDao.observe(
+        getListDao.observe(
             this@VAActivityListVideos
         ) {
-            /*if (it.isLoading) {
-                toast("Loading")
-                return
+            Log.d(TAG, "getListVideosAsync: getListDao: ${mListVideos.isNotEmpty()}")
+            if (mListVideos.isNotEmpty()) {
+                mListVideos.clear()
+                mAdapter.notifyDataSetChanged()
             }
 
-            if (state.error != null) {
-                toast("Error: ${state.error}")
-                return
-            }*/
-
-            success?.invoke(it)
+            mListVideos.addAll(it)
+            mAdapter.notifyItemRangeInserted(
+                0,
+                mListVideos.size
+            )
         }
     }
 }

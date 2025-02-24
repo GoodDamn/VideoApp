@@ -17,23 +17,12 @@ class VARepoVideo @Inject constructor(
     private val api: VAApiVideo
 ) {
 
-    val getListVideosDao: Flow<
-        List<VAModelVideoListItem>
-    > = videoDao.getVideosList()
+    val getListVideosDao: Flow<List<VAModelVideoListItem>>
+        get() = videoDao.getVideosList()
 
-    suspend fun add(
-        list: List<VAModelVideoListItem>
-    ) = withContext(
-        Dispatchers.IO
-    ) {
-        videoDao.add(list)
-    }
-
-    fun getListVideos(): Flow<
-        VAStateResponse<
-            List<VAModelVideoListItem>
-        >
-    > = flow {
+    val getListVideos: Flow<
+        VAStateResponse<List<VAModelVideoListItem>>
+    > get() = flow {
         try {
             emit(VAStateResponse.Loading())
             val response = api.getListVideos()
@@ -48,6 +37,14 @@ class VARepoVideo @Inject constructor(
             ))
         }
     }.flowOn(Dispatchers.IO)
+
+    suspend fun add(
+        list: List<VAModelVideoListItem>
+    ) = withContext(
+        Dispatchers.IO
+    ) {
+        videoDao.add(list)
+    }
 
     fun getVideoDetailsById(
         id: Long
