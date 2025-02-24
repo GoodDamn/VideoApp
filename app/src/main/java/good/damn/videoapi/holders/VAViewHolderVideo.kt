@@ -2,20 +2,17 @@ package good.damn.videoapi.holders
 
 import android.content.Context
 import android.view.Gravity
-import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import good.damn.videoapi.VAApp
-import good.damn.videoapi.adapters.videos.VAListenerOnSelectVideo
+import good.damn.videoapi.extensions.setTextSizePx
 
 class VAViewHolderVideo(
     val textViewTitle: AppCompatTextView,
-    val textViewSubtitle: AppCompatTextView,
+    val textViewDuration: AppCompatTextView,
     val imageViewThumbnail: AppCompatImageView,
     layout: ViewGroup
 ): RecyclerView.ViewHolder(
@@ -51,13 +48,12 @@ class VAViewHolderVideo(
             }
 
 
-            val layoutContent = LinearLayout(
+            val layoutContent = FrameLayout(
                 context
             ).apply {
                 setBackgroundColor(
                     VAApp.theme.colorTextBack
                 )
-                orientation = LinearLayout.VERTICAL
                 layoutParams = FrameLayout.LayoutParams(
                     -1,
                     -2
@@ -74,14 +70,23 @@ class VAViewHolderVideo(
                     VAApp.theme.colorText
                 )
 
-                layoutContent.addView(
-                    this,
-                    -1,
+                setTextSizePx(
+                    height * 0.1f
+                )
+
+                layoutParams = FrameLayout.LayoutParams(
+                    -2,
                     -2
+                ).apply {
+                    gravity = Gravity.START or Gravity.BOTTOM
+                }
+
+                layoutContent.addView(
+                    this
                 )
             }
 
-            val tvSubtitle = AppCompatTextView(
+            val tvDuration = AppCompatTextView(
                 context
             ).apply {
                 background = null
@@ -89,10 +94,19 @@ class VAViewHolderVideo(
                     VAApp.theme.colorText
                 )
 
-                layoutContent.addView(
-                    this,
-                    -1,
+                setTextSizePx(
+                    height * 0.1f
+                )
+
+                layoutParams = FrameLayout.LayoutParams(
+                    -2,
                     -2
+                ).apply {
+                    gravity = Gravity.END or Gravity.BOTTOM
+                }
+
+                layoutContent.addView(
+                    this
                 )
             }
 
@@ -102,7 +116,7 @@ class VAViewHolderVideo(
 
             return VAViewHolderVideo(
                 tvTitle,
-                tvSubtitle,
+                tvDuration,
                 ivThumbnail,
                 layout
             )

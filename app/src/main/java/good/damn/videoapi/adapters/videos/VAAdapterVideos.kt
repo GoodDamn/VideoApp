@@ -1,11 +1,11 @@
 package good.damn.videoapi.adapters.videos
 
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import good.damn.videoapi.VAApp
 import good.damn.videoapi.arch.models.VAModelVideoListItem
+import good.damn.videoapi.extensions.toStringTime
 import good.damn.videoapi.holders.VAViewHolderVideo
 
 class VAAdapterVideos(
@@ -31,7 +31,7 @@ class VAAdapterVideos(
     ) {
         videos[position].apply {
             holder.textViewTitle.text = title
-            holder.textViewSubtitle.text = subtitle
+            holder.textViewDuration.text = duration.toStringTime()
 
             holder.itemView.setOnClickListener {
                 onSelectVideo.onSelectVideo(

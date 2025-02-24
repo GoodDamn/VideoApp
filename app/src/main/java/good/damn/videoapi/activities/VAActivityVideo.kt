@@ -40,6 +40,10 @@ class VAActivityVideo
             savedInstanceState
         )
 
+        window.decorView.setBackgroundColor(
+            0xff000000.toInt()
+        )
+
         val context = this
 
         val id = intent.getLongExtra(
@@ -58,6 +62,7 @@ class VAActivityVideo
             PlayerView(
                 context
             ).apply {
+                setBackgroundColor(0)
                 player = ExoPlayer.Builder(
                     context
                 ).build().apply {

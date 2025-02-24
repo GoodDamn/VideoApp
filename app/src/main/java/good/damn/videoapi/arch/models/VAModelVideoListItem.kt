@@ -9,8 +9,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class VAModelVideoListItem(
     @PrimaryKey(autoGenerate = true)
-    val id: Long?,
+    val id: Long,
     val title: String?,
     val thumbnail: String?,
-    val subtitle: String?
+    val subtitle: String?,
+    val duration: Long
 )
