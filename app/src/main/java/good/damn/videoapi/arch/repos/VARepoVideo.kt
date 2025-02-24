@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import okio.IOException
 import javax.inject.Inject
 
 class VARepoVideo @Inject constructor(
@@ -31,6 +32,10 @@ class VARepoVideo @Inject constructor(
                     response.list
                 )
             )
+        } catch (e: IOException) {
+            emit(VAStateResponse.Error(
+                "Network failure"
+            ))
         } catch (e: Exception) {
             emit(VAStateResponse.Error(
                 "Error: ${e.localizedMessage}"
@@ -59,6 +64,10 @@ class VARepoVideo @Inject constructor(
             val response = api.getVideoDetailsById(id)
             emit(VAStateResponse.Success(
                 response
+            ))
+        } catch (e: IOException) {
+            emit(VAStateResponse.Error(
+                "Network failure"
             ))
         } catch (e: Exception) {
             emit(VAStateResponse.Error(

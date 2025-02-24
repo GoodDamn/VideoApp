@@ -12,6 +12,7 @@ import good.damn.videoapi.arch.models.VAModelVideoDetails
 import good.damn.videoapi.arch.state.VAStateResponse
 import good.damn.videoapi.arch.state.VAStateVideoDetails
 import good.damn.videoapi.arch.viewModels.VAViewModelVideoDetails
+import good.damn.videoapi.extensions.toast
 import good.damn.videoapi.misc.VAPlayerViewPlaysWhenReady
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -126,10 +127,12 @@ class VAActivityVideo
         success: (VAModelVideoDetails) -> Unit
     ) {
         if (state.isLoading) {
+            toast("Loading")
             return
         }
 
         if (state.error != null) {
+            toast("Error: ${state.error}")
             return
         }
 
